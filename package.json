@@ -1,0 +1,49 @@
+{
+  "name": "gaishan",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Electron video player for language learning with subtitles, dictionary lookups, and pronunciation playback.",
+  "author": "alfasi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alfasi/gaishan.git"
+  },
+  "type": "module",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "electron:dev": "NODE_ENV=development electron .",
+    "electron:build": "vite build && electron-builder",
+    "electron:pack": "vite build && electron-builder --dir"
+  },
+  "dependencies": {
+    "matroska-subtitles": "^3.3.2",
+    "opencc-js": "^1.0.5",
+    "pinyin-pro": "^3.28.0"
+  },
+  "devDependencies": {
+    "electron": "^35.0.1",
+    "electron-builder": "^25.1.8",
+    "vite": "^5.4.21",
+    "vite-plugin-node-polyfills": "^0.22.0",
+    "vite-plugin-singlefile": "^2.3.2"
+  },
+  "build": {
+    "appId": "com.gaishan.app",
+    "productName": "Gaishan",
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    },
+    "win": {
+      "target": "nsis"
+    }
+  }
+}

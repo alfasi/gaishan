@@ -1,0 +1,2 @@
+# Japanese word frequency data (word<TAB>tier 1-5, where 5=very common)
+# To populate with real data: node scripts/fetch-frequency.js

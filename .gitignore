@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.DS_Store
+release/
+*.log
+*.tmp
+*.swp
+electron-builder.yml
+example/*.mkv

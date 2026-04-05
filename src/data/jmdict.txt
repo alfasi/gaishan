@@ -1,0 +1,3 @@
+# JMdict Japanese-English dictionary
+# Format: kanji_form<TAB>kana_reading<TAB>definition1/definition2/...
+# To populate: node scripts/fetch-jmdict.js
