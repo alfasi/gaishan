@@ -11,11 +11,13 @@
   "type": "module",
   "main": "electron/main.js",
   "scripts": {
+    "icons": "zsh scripts/generate-icons.sh",
     "dev": "vite",
     "build": "vite build",
     "electron:dev": "NODE_ENV=development electron .",
-    "electron:build": "vite build && electron-builder",
-    "electron:pack": "vite build && electron-builder --dir"
+    "electron:build": "npm run build && npm run icons && electron-builder",
+    "electron:build:all": "npm run build && npm run icons && electron-builder --mac --linux --win",
+    "electron:pack": "npm run build && npm run icons && electron-builder --dir"
   },
   "dependencies": {
     "matroska-subtitles": "^3.3.2",
@@ -25,6 +27,7 @@
   "devDependencies": {
     "electron": "^35.0.1",
     "electron-builder": "^25.1.8",
+    "electron-icon-builder": "^2.0.1",
     "vite": "^5.4.21",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-singlefile": "^2.3.2"
@@ -32,18 +35,41 @@
   "build": {
     "appId": "com.gaishan.app",
     "productName": "Gaishan",
+    "asar": true,
+    "compression": "maximum",
+    "afterPack": "./scripts/after-pack.js",
+    "directories": {
+      "output": "release-build"
+    },
     "files": [
-      "dist/**/*",
-      "electron/**/*"
+      "dist/renderer/**/*",
+      "electron/**/*",
+      "package.json",
+      "!dist/mac*/**",
+      "!dist/win*/**",
+      "!dist/linux*/**",
+      "!release-build/**",
+      "!release/**",
+      "!example/*.mkv",
+      "!**/*.map",
+      "!**/README*",
+      "!**/CHANGELOG*",
+      "!**/test{,s}/**",
+      "!**/__tests__/**",
+      "!**/tsconfig*.json"
     ],
     "mac": {
-      "target": "dmg"
+      "icon": "build/icons/icon.icns",
+      "category": "public.app-category.education",
+      "target": "zip"
     },
     "linux": {
-      "target": "AppImage"
+      "icon": "build/icons/512x512.png",
+      "target": "tar.gz"
     },
     "win": {
-      "target": "nsis"
+      "icon": "build/icons/icon.ico",
+      "target": "zip"
     }
   }
 }

@@ -11,5 +11,7 @@ export default defineConfig({
   ],
   build: {
     target: 'esnext',
+    outDir: 'dist/renderer',
+    emptyOutDir: true,
   },
 })

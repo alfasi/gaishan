@@ -5,9 +5,11 @@ import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const isDev = process.env.NODE_ENV === 'development'
+const APP_NAME = 'Gaishan'
 
 // Enable the HTMLMediaElement audioTracks / videoTracks API
 app.commandLine.appendSwitch('enable-features', 'AudioVideoTracks')
+app.setName(APP_NAME)
 
 const VIDEO_EXTS = new Set(['.mkv', '.mp4', '.webm', '.avi', '.mov', '.m4v'])
 
@@ -37,6 +39,7 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 1280,
     height: 800,
+    title: APP_NAME,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
@@ -47,7 +50,7 @@ function createWindow() {
   if (isDev) {
     win.loadURL('http://localhost:5173')
   } else {
-    win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'))
+    win.loadFile(path.join(__dirname, '..', 'dist', 'renderer', 'index.html'))
   }
 }
 

@@ -73,6 +73,8 @@ Planned release outputs:
 
 Unsigned builds are possible locally. Platform signing and notarization require developer credentials that are not stored in this repository.
 
+For unsigned macOS builds downloaded from GitHub, Gatekeeper may block direct launch. Ad-hoc signing keeps the bundle structurally valid, but proper Apple signing and notarization are still required for a frictionless download-and-open experience.
+
 ## Repository
 
 Intended GitHub remote:
