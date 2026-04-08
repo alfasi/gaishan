@@ -1,0 +1,539 @@
+/* ── Gaishan extension overlay styles ─────────────────────────────────────────
+   All rules are scoped under #gaishan-root to avoid conflicts with host pages.
+   CSS custom properties are defined on #gaishan-root so they cascade only to
+   extension elements.
+─────────────────────────────────────────────────────────────────────────────── */
+
+#gaishan-root {
+  --gs-bg-deep: #0b0c12;
+  --gs-bg-surface: #111219;
+  --gs-bg-elevated: #1a1b27;
+  --gs-bg-hover: #232535;
+  --gs-bg-active: #2c2e44;
+  --gs-border: #262840;
+  --gs-border-light: #34375a;
+  --gs-text: #c4c7d8;
+  --gs-text-dim: #6a6d84;
+  --gs-text-bright: #e8eaf4;
+  --gs-accent: #d4a24c;
+  --gs-accent-glow: rgba(212, 162, 76, 0.25);
+  --gs-accent-dim: rgba(212, 162, 76, 0.12);
+  --gs-red: #d85252;
+  --gs-blue: #6ba0d8;
+  --gs-popup-bg: rgba(17, 18, 25, 0.96);
+  --gs-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  pointer-events: none !important;
+  z-index: 2147483647 !important;
+  overflow: visible !important;
+  font-family: var(--gs-font) !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Overlay container (positioned over video by JS) ── */
+#gaishan-root #gaishan-overlay-container {
+  position: fixed;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* ── Subtitle overlay ── */
+#gaishan-root #gaishan-subtitle-overlay {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  pointer-events: auto;
+  max-width: 88%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#gaishan-root .subtitle-line {
+  display: inline-block;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  margin-bottom: 0.2rem;
+  line-height: 1.6;
+  font-family: var(--gs-font);
+}
+
+#gaishan-root .subtitle-line .word {
+  cursor: pointer;
+  display: inline-block;
+  border-radius: 4px;
+  padding: 0.15rem 0.12rem;
+  transition: background 0.15s;
+}
+
+#gaishan-root .subtitle-line .word:hover {
+  background: var(--gs-accent-glow);
+}
+
+#gaishan-root .subtitle-line .word.highlighted {
+  background: rgba(212, 162, 76, 0.3);
+  outline: 2px solid var(--gs-red);
+  outline-offset: 1px;
+}
+
+#gaishan-root .subtitle-line .char {
+  display: inline-block;
+  padding: 0 1px;
+  border-radius: 2px;
+}
+
+#gaishan-root .subtitle-line ruby {
+  font-size: 1.6rem;
+}
+
+#gaishan-root .subtitle-line rt {
+  font-size: 0.7rem;
+  color: #bbb;
+  font-weight: 300;
+}
+
+#gaishan-root .subtitle-line .char:not([data-pinyin]) {
+  font-size: 1.4rem;
+}
+
+#gaishan-root .subtitle-line-english {
+  display: block;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: 0.25rem 0.7rem;
+  border-radius: 6px;
+  margin-top: 0.2rem;
+  font-size: 1.05rem;
+  color: #d0d0d0;
+  line-height: 1.5;
+  font-family: var(--gs-font);
+}
+
+#gaishan-root .subtitle-line-english.empty {
+  visibility: hidden;
+}
+
+/* Hide readings (pinyin/furigana) when toggled off */
+#gaishan-root.hide-readings rt {
+  display: none !important;
+}
+
+/* ── Dictionary popup ── */
+#gaishan-root #gaishan-dict-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+#gaishan-root #dict-popup {
+  position: fixed;
+  pointer-events: auto;
+  background: var(--gs-popup-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--gs-border);
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  min-width: 220px;
+  max-width: 380px;
+  max-height: 320px;
+  overflow-y: auto;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  font-family: var(--gs-font);
+  color: var(--gs-text);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+#gaishan-root #dict-popup::-webkit-scrollbar { width: 4px; }
+#gaishan-root #dict-popup::-webkit-scrollbar-thumb {
+  background: var(--gs-border-light);
+  border-radius: 3px;
+}
+
+#gaishan-root .dict-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--gs-border);
+}
+
+#gaishan-root .dict-word {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--gs-text-bright);
+}
+
+#gaishan-root .dict-traditional { font-size: 1.1rem; color: var(--gs-text-dim); }
+#gaishan-root .dict-traditional::before { content: '('; }
+#gaishan-root .dict-traditional::after { content: ')'; }
+
+#gaishan-root .dict-pinyin {
+  font-size: 1rem;
+  color: var(--gs-blue);
+  font-style: italic;
+}
+
+#gaishan-root .dict-speak-btn {
+  background: none;
+  border: 1px solid var(--gs-border);
+  color: var(--gs-text-dim);
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+#gaishan-root .dict-speak-btn:hover {
+  color: var(--gs-accent);
+  background: var(--gs-accent-dim);
+  border-color: var(--gs-accent);
+}
+
+#gaishan-root .dict-speak-btn svg { width: 16px; height: 16px; }
+
+#gaishan-root .dict-stars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+}
+
+#gaishan-root .dict-stars .star { color: var(--gs-text-dim); }
+#gaishan-root .dict-stars .star.filled { color: var(--gs-accent); }
+#gaishan-root .dict-freq-label {
+  font-size: 0.72rem;
+  color: var(--gs-text-dim);
+  margin-left: 6px;
+}
+
+#gaishan-root .dict-alt-pinyin {
+  font-size: 0.9rem;
+  color: var(--gs-blue);
+  font-style: italic;
+  margin-top: 0.5rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--gs-border);
+}
+
+#gaishan-root .dict-defs {
+  margin: 0.3rem 0 0 1.2rem;
+  padding: 0;
+  list-style: decimal;
+}
+
+#gaishan-root .dict-defs li {
+  font-size: 0.84rem;
+  color: var(--gs-text);
+  line-height: 1.5;
+  padding: 0.1rem 0;
+}
+
+/* ── Control panel ── */
+#gaishan-root #gaishan-panel {
+  position: fixed;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  z-index: 2;
+}
+
+#gaishan-root #gaishan-trigger {
+  width: 36px;
+  height: 36px;
+  background: rgba(11, 12, 18, 0.88);
+  border: 1px solid var(--gs-border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--gs-accent);
+  transition: background 0.15s, border-color 0.15s;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  user-select: none;
+}
+
+#gaishan-root #gaishan-trigger:hover {
+  background: var(--gs-bg-elevated);
+  border-color: var(--gs-border-light);
+}
+
+#gaishan-root #gaishan-panel-body {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(11, 12, 18, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--gs-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  min-width: 200px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+}
+
+#gaishan-root #gaishan-panel-body.visible {
+  display: flex;
+}
+
+#gaishan-root .gs-logo {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--gs-accent);
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+
+#gaishan-root .gs-btn {
+  background: var(--gs-bg-elevated);
+  border: 1px solid var(--gs-border);
+  color: var(--gs-text);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-family: var(--gs-font);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#gaishan-root .gs-btn:hover {
+  background: var(--gs-bg-hover);
+  border-color: var(--gs-border-light);
+  color: var(--gs-text-bright);
+}
+
+#gaishan-root .gs-status {
+  font-size: 0.75rem;
+  color: var(--gs-text-dim);
+  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 210px;
+}
+
+#gaishan-root .gs-divider {
+  height: 1px;
+  background: var(--gs-border);
+  margin: 2px 0;
+}
+
+#gaishan-root .gs-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: var(--gs-text);
+  gap: 10px;
+  user-select: none;
+}
+
+#gaishan-root .gs-toggle input[type="checkbox"] {
+  display: none;
+}
+
+#gaishan-root .gs-toggle-track {
+  width: 34px;
+  height: 18px;
+  background: var(--gs-bg-active);
+  border-radius: 10px;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+#gaishan-root .gs-toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: var(--gs-text-dim);
+  border-radius: 50%;
+  transition: transform 0.2s, background 0.2s;
+}
+
+#gaishan-root .gs-toggle input:checked + .gs-toggle-track {
+  background: var(--gs-accent-dim);
+}
+
+#gaishan-root .gs-toggle input:checked + .gs-toggle-track::after {
+  transform: translateX(16px);
+  background: var(--gs-accent);
+}
+
+/* ── Transcript panel ─────────────────────────────────────────────── */
+
+#gaishan-root #gaishan-transcript-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 320px;
+  height: 100vh;
+  background: rgba(11, 12, 18, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid var(--gs-border);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto;
+  z-index: 3;
+  font-family: var(--gs-font);
+  overflow: hidden;
+}
+
+#gaishan-root #gaishan-transcript-panel.open {
+  transform: translateX(0);
+}
+
+#gaishan-root .gs-transcript-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--gs-bg-elevated);
+  border-bottom: 1px solid var(--gs-border);
+  flex-shrink: 0;
+}
+
+#gaishan-root .gs-transcript-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--gs-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+#gaishan-root .gs-transcript-close {
+  background: none;
+  border: none;
+  color: var(--gs-text-dim);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1;
+  transition: color 0.15s, background 0.15s;
+}
+
+#gaishan-root .gs-transcript-close:hover {
+  background: var(--gs-bg-hover);
+  color: var(--gs-text-bright);
+}
+
+#gaishan-root .gs-transcript-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+#gaishan-root .gs-transcript-body::-webkit-scrollbar { width: 5px; }
+#gaishan-root .gs-transcript-body::-webkit-scrollbar-track { background: transparent; }
+#gaishan-root .gs-transcript-body::-webkit-scrollbar-thumb {
+  background: var(--gs-border);
+  border-radius: 3px;
+}
+
+/* Transcript rows (created by createTranscriptPanel) */
+
+#gaishan-root .transcript-row {
+  display: flex;
+  gap: 0.6rem;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background 0.1s, border-color 0.1s;
+  color: var(--gs-text);
+}
+
+#gaishan-root .transcript-row:hover {
+  background: var(--gs-bg-hover);
+}
+
+#gaishan-root .transcript-row.active {
+  background: var(--gs-accent-dim);
+  border-left-color: var(--gs-accent);
+  color: var(--gs-text-bright);
+}
+
+#gaishan-root .transcript-time {
+  font-size: 0.72rem;
+  color: var(--gs-text-dim);
+  flex-shrink: 0;
+  width: 3.2rem;
+  padding-top: 0.15rem;
+  font-variant-numeric: tabular-nums;
+}
+
+#gaishan-root .transcript-text {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: inherit;
+}
+
+#gaishan-root .transcript-word {
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background 0.12s;
+  padding: 0 1px;
+}
+
+#gaishan-root .transcript-word:hover {
+  background: var(--gs-accent-glow);
+  color: var(--gs-text-bright);
+}
+
+#gaishan-root .transcript-pinyin {
+  font-size: 0.72rem;
+  color: var(--gs-blue);
+  font-style: italic;
+  display: block;
+  line-height: 1.3;
+  margin-bottom: 0.1rem;
+  font-weight: 300;
+}
+
+/* Hide-readings mode: suppress pinyin line */
+#gaishan-root.hide-readings .transcript-pinyin { display: none !important; }
+
+/* ── Active transcript-btn state ─────────────────────────────────────── */
+
+#gaishan-root .gs-btn.active {
+  background: var(--gs-accent-dim);
+  border-color: var(--gs-accent);
+  color: var(--gs-accent);
+}
