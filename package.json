@@ -13,11 +13,15 @@
   "scripts": {
     "icons": "zsh scripts/generate-icons.sh",
     "dev": "vite",
-    "build": "vite build",
+    "build:player": "vite build",
+    "build:extension:content": "vite build --mode extension-content",
+    "build:extension:popup": "vite build --mode extension-popup",
+    "build:extension": "npm run build:extension:content && npm run build:extension:popup && node scripts/finalize-extension.js",
+    "build": "npm run build:player && npm run build:extension",
     "electron:dev": "NODE_ENV=development electron .",
-    "electron:build": "npm run build && npm run icons && electron-builder",
-    "electron:build:all": "npm run build && npm run icons && electron-builder --mac --linux --win",
-    "electron:pack": "npm run build && npm run icons && electron-builder --dir"
+    "electron:build": "npm run build:player && npm run icons && electron-builder",
+    "electron:build:all": "npm run build:player && npm run icons && electron-builder --mac --linux --win",
+    "electron:pack": "npm run build:player && npm run icons && electron-builder --dir"
   },
   "dependencies": {
     "matroska-subtitles": "^3.3.2",

@@ -48,9 +48,9 @@ function createWindow() {
   })
 
   if (isDev) {
-    win.loadURL('http://localhost:5173')
+    win.loadURL('http://localhost:5173/player.html')
   } else {
-    win.loadFile(path.join(__dirname, '..', 'dist', 'renderer', 'index.html'))
+    win.loadFile(path.join(__dirname, '..', 'dist', 'renderer', 'player.html'))
   }
 }
 

@@ -1,25 +1,29 @@
 /**
  * Word frequency rating module.
- * Loads frequency data from bundled text files if available,
- * falls back to a heuristic estimate based on word length and character type.
+ * Loads frequency data from bundled text files (lazy, on first access).
  *
  * Data files format: one entry per line — word<TAB>tier (1-5)
  * Download proper data: node scripts/fetch-frequency.js
  */
+import zhFreqText from '../data/freq-zh.txt?raw'
+import jaFreqText from '../data/freq-ja.txt?raw'
 
 let zhFreq = null
 let jaFreq = null
 
-// Try to load bundled frequency data (may be empty/comments only)
-try {
-  const zhText = (await import('../data/freq-zh.txt?raw')).default
-  zhFreq = parseFreqFile(zhText)
-} catch { /* not available */ }
+function getZhFreq() {
+  if (zhFreq === null) {
+    try { zhFreq = parseFreqFile(zhFreqText) } catch { zhFreq = null }
+  }
+  return zhFreq
+}
 
-try {
-  const jaText = (await import('../data/freq-ja.txt?raw')).default
-  jaFreq = parseFreqFile(jaText)
-} catch { /* not available */ }
+function getJaFreq() {
+  if (jaFreq === null) {
+    try { jaFreq = parseFreqFile(jaFreqText) } catch { jaFreq = null }
+  }
+  return jaFreq
+}
 
 function parseFreqFile(text) {
   const map = new Map()
@@ -47,14 +51,11 @@ const KANA_RE = /^[\u3040-\u309f\u30a0-\u30ff\u30fc]+$/
  * @returns {number} 1–5
  */
 export function getFrequencyStars(word, lang = 'zh') {
-  // Check loaded frequency data first
-  const freqMap = lang === 'ja' ? jaFreq : zhFreq
+  const freqMap = lang === 'ja' ? getJaFreq() : getZhFreq()
   if (freqMap) {
     const tier = freqMap.get(word)
     if (tier != null) return tier
   }
-
-  // Heuristic fallback based on word length and character type
   return estimateFrequency(word, lang)
 }
 

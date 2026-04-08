@@ -7,10 +7,9 @@
  *
  * Generate the data file: node scripts/fetch-jmdict.js
  */
+import _jmdictRaw from '../data/jmdict.txt?raw'
 let dictText = null
-try {
-  dictText = (await import('../data/jmdict.txt?raw')).default
-} catch { /* not available */ }
+try { dictText = _jmdictRaw } catch { /* not available */ }
 
 let dictMap = null
 let readingMap = null
